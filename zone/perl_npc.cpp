@@ -1607,6 +1607,29 @@ XS(XS_NPC_RemoveRangedProc) {
 	XSRETURN_EMPTY;
 }
 
+XS(XS_NPC_RemovePermaProc);
+XS(XS_NPC_RemovePermaProc) {
+	dXSARGS;
+	if (items != 2)
+		Perl_croak(aTHX_ "Usage: NPC::RemovePermaProc(THIS, int spell_id)");
+	{
+		NPC *THIS;
+		int spell_id = (int) SvIV(ST(1));
+		dXSTARG;
+
+		if (sv_derived_from(ST(0), "NPC")) {
+			IV tmp = SvIV((SV *) SvRV(ST(0)));
+			THIS = INT2PTR(NPC *, tmp);
+		} else
+			Perl_croak(aTHX_ "THIS is not of type NPC");
+		if (THIS == NULL)
+			Perl_croak(aTHX_ "THIS is NULL, avoiding crash.");
+
+		THIS->RemovePermaProcFromWeapon(spell_id);
+	}
+	XSRETURN_EMPTY;
+}
+
 XS(XS_NPC_RemoveDefensiveProc);
 XS(XS_NPC_RemoveDefensiveProc) {
 	dXSARGS;
@@ -2016,6 +2039,7 @@ XS(boot_NPC) {
 	newXSproto(strcpy(buf, "RemoveItem"), XS_NPC_RemoveItem, file, "$$;$$");
 	newXSproto(strcpy(buf, "RemoveMeleeProc"), XS_NPC_RemoveMeleeProc, file, "$$");
 	newXSproto(strcpy(buf, "RemoveRangedProc"), XS_NPC_RemoveRangedProc, file, "$$");
+	newXSproto(strcpy(buf, "RemovePermaProc"), XS_NPC_RemovePermaProc, file, "$$");
 	newXSproto(strcpy(buf, "ResumeWandering"), XS_NPC_ResumeWandering, file, "$");
 	newXSproto(strcpy(buf, "SaveGuardSpot"), XS_NPC_SaveGuardSpot, file, "$$$$$");
 	newXSproto(strcpy(buf, "ScaleNPC"), XS_NPC_ScaleNPC, file, "$$");

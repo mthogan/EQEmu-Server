@@ -5805,6 +5805,20 @@ bool Mob::RemoveProcFromWeapon(uint16 spell_id, bool bAll) {
 	return true;
 }
 
+bool Mob::RemovePermaProcFromWeapon(uint16 spell_id) {
+	for (int i = 0; i < MAX_PROCS; i++) {
+		if (PermaProcs[i].spellID == spell_id) {
+			PermaProcs[i].spellID = SPELL_UNKNOWN;
+			PermaProcs[i].chance = 0;
+			PermaProcs[i].base_spellID = SPELL_UNKNOWN;
+			PermaProcs[i].level_override = -1;
+			PermaProcs[i].proc_reuse_time = 0;
+			LogSpells("Removed permanent proc [{}] from slot [{}]", spell_id, i);
+		}
+	}
+	return true;
+}
+
 bool Mob::AddDefensiveProc(uint16 spell_id, uint16 iChance, uint16 base_spell_id, uint32 proc_reuse_time)
 {
 	if(spell_id == SPELL_UNKNOWN)
